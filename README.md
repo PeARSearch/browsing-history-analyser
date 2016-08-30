@@ -1,11 +1,38 @@
 # browsing-history-analyser
 
-A repo for the local browsing history analyser, which lets the user see the topics of what they've browsed.
+This repo contains code that lets the user create profile from their Firefox browsing history. Please note that this is very early code, with a number of issues to be solved. However, we appreciate test reports!!
 
-The requirements are:
+## Instructions
 
-* A daemon which checks the http/https calls from the system. It should insert the appropriate urls in a database. 
-* The parser (create_history_db.py and retrieve_pages.py, currently in the root of the PeARS repo).
-* Some distributional semantics code to produce vectors from documents.
-* A clustering algorithm, which clusters vectors by similarity and puts helpful keywords on each cluster.
-* A GUI that lets the user pick which clusters they want to share on the network, together with a program that will produce a vector database for the retained documents, and delete the rest.
+First, make sure you have a local PeARS install. (In the following, we'll assume you have a ~/PeARS/ directory on your machine, cloned from https://github.com/PeARSearch/PeARS.)
+
+Clone the present repo:
+
+`git clone https://github.com/PeARSearch/browsing-history-analyser.git`
+
+Make sure you have all needed dependencies:
+
+`pip install -r requirements.txt`
+
+Link to the semantic space in your PeARS install:
+
+`ln -s ~/PeARS/openvectors.db .`
+
+
+To index (some of) your browsing history, run the analyser:
+
+`python run_analyser.py`
+
+To search, copy the necessary files to your local PeARS install. 
+
+`cp -r local-history ~/PeARS/demo/users/`
+
+Then, move to your PeARS install and update your shared_pears_ids.txt file:
+
+`cd ~/PeARS`
+
+`egrep "pear_id" demo/users/local-history/profile.txt |sed "s/pear_id:/demo\/users\/local-history /" >> app/shared_pears_ids.txt`
+
+You're ready to search!
+
+`python run.py`
